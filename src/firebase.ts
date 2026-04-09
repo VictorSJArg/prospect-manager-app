@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
@@ -9,10 +9,18 @@ export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
 export const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
+  // signInWithRedirect redirige al usuario a Google directamente
+  // sin necesidad de popup (más compatible con todos los navegadores)
+  await signInWithRedirect(auth, provider);
+};
+
+// Procesar el resultado del redirect cuando el usuario vuelve
+export const processRedirectResult = async () => {
   try {
-    await signInWithPopup(auth, provider);
+    const result = await getRedirectResult(auth);
+    return result;
   } catch (error) {
-    console.error("Error signing in with Google", error);
+    console.error("Error processing redirect result:", error);
     throw error;
   }
 };
@@ -75,4 +83,3 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   console.error('Firestore Error: ', JSON.stringify(errInfo));
   throw new Error(JSON.stringify(errInfo));
 }
-

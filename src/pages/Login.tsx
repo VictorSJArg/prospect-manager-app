@@ -1,35 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { signInWithGoogle } from '../firebase';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Si ya está autenticado, redirigir al dashboard
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleLogin = async () => {
     if (loading) return;
     setLoading(true);
     setError('');
-    
-    // Timeout de seguridad de 15 segundos
-    const timeoutId = setTimeout(() => {
-      setLoading(false);
-      setError('Tiempo de espera agotado. Revisa si la ventana de Google quedó oculta detrás de esta.');
-    }, 15000);
-
     try {
+      // Esto redirige al usuario a Google directamente
+      // No usa popup, por lo que no hay bloqueos
       await signInWithGoogle();
-      clearTimeout(timeoutId);
+      // El usuario será redirigido a Google, no llega aquí
     } catch (err: any) {
-      clearTimeout(timeoutId);
-      if (err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user') {
-        setError('Cancelaste el inicio de sesión o la ventana se cerró.');
-      } else if (err.code === 'auth/popup-blocked') {
-        setError('Tu navegador bloqueó la ventana de Google. Por favor, desactiva tu bloqueador de anuncios o permite ventanas emergentes.');
-      } else if (err.code === 'auth/unauthorized-domain') {
-        setError('Firebase bloqueó el acceso. Asegúrate de haber agregado este dominio a Firebase.');
-      } else {
-        setError('Error: ' + (err.message || 'Inténtalo de nuevo.'));
-      }
+      setError('Error al iniciar sesión: ' + (err.message || 'Inténtalo de nuevo.'));
       setLoading(false);
     }
   };
@@ -61,7 +58,7 @@ export default function Login() {
           ) : (
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5 bg-white rounded-full p-0.5" />
           )}
-          {loading ? 'Iniciando sesión...' : 'Iniciar sesión con Google'}
+          {loading ? 'Redirigiendo a Google...' : 'Iniciar sesión con Google'}
         </button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, processRedirectResult } from '../firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -16,6 +16,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Procesar resultado de redirect (si el usuario viene de Google)
+    processRedirectResult().catch(() => {});
+
+    // Escuchar cambios de autenticación
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -26,8 +30,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <AuthContext.Provider value={{ user, loading }}>
       {loading ? (
-        <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
-          <p className="text-on-surface">Cargando aplicación...</p>
+        <div className="min-h-screen bg-surface flex flex-col items-center justify-center gap-4">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-secondary text-sm">Cargando aplicación...</p>
         </div>
       ) : (
         children
