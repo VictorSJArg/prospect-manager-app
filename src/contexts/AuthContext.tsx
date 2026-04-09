@@ -16,15 +16,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Procesar resultado de redirect (si el usuario viene de Google)
-    processRedirectResult().catch(() => {});
+    let unsubscribe: (() => void) | null = null;
 
-    // Escuchar cambios de autenticación
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-    return unsubscribe;
+    const init = async () => {
+      // Primero procesamos el resultado del redirect (si viene de Google)
+      // Esto actualiza auth.currentUser internamente antes de que
+      // onAuthStateChanged lo detecte
+      try {
+        await processRedirectResult();
+      } catch (err) {
+        console.error('Redirect result error:', err);
+      }
+
+      // Ahora escuchamos los cambios de auth (ya tiene el usuario actualizado)
+      unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        setUser(firebaseUser);
+        setLoading(false);
+      });
+    };
+
+    init();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   return (
@@ -32,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {loading ? (
         <div className="min-h-screen bg-surface flex flex-col items-center justify-center gap-4">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-secondary text-sm">Cargando aplicación...</p>
+          <p className="text-secondary text-sm">Verificando sesión...</p>
         </div>
       ) : (
         children
