@@ -154,7 +154,8 @@ export default function Dashboard() {
     return (
       lead.name?.toLowerCase().includes(term) ||
       lead.phone?.toLowerCase().includes(term) ||
-      lead.dni?.toLowerCase().includes(term)
+      lead.dni?.toLowerCase().includes(term) ||
+      lead.profession?.toLowerCase().includes(term)
     );
   });
 
