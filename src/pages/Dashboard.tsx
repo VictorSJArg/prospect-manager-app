@@ -302,7 +302,7 @@ export default function Dashboard() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-14 pr-6 py-5 bg-surface-container-lowest border-0 border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 text-lg transition-all rounded-t-xl shadow-sm placeholder:text-outline/60"
-              placeholder="Búsqueda por DNI, Nombre o Teléfono..."
+              placeholder="Búsqueda por DNI, Nombre, Teléfono o Profesión..."
             />
           </div>
           {/* Status and Priority Filters */}
