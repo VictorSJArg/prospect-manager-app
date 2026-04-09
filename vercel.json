@@ -1,0 +1,6 @@
+{
+  "name": "prospect-manager-app",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
