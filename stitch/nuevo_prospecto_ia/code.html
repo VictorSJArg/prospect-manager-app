@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-lowest": "#ffffff",
+                "surface-tint": "#4c56af",
+                "on-primary-fixed-variant": "#343d96",
+                "on-tertiary-fixed-variant": "#354a53",
+                "on-tertiary-container": "#859ba6",
+                "surface-container": "#edeeef",
+                "on-primary-fixed": "#000767",
+                "surface": "#f8f9fa",
+                "on-primary-container": "#8690ee",
+                "on-surface": "#191c1d",
+                "error": "#ba1a1a",
+                "primary-container": "#1a237e",
+                "secondary-container": "#d1e2ec",
+                "secondary-fixed-dim": "#b8c9d3",
+                "tertiary-fixed": "#cfe6f2",
+                "secondary": "#506169",
+                "on-error-container": "#93000a",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#bdc2ff",
+                "surface-container-highest": "#e1e3e4",
+                "tertiary": "#071e27",
+                "on-tertiary": "#ffffff",
+                "inverse-primary": "#bdc2ff",
+                "on-secondary": "#ffffff",
+                "tertiary-container": "#1e333c",
+                "primary-fixed": "#e0e0ff",
+                "outline-variant": "#c6c5d4",
+                "surface-bright": "#f8f9fa",
+                "surface-container-high": "#e7e8e9",
+                "on-tertiary-fixed": "#071e27",
+                "surface-container-low": "#f3f4f5",
+                "tertiary-fixed-dim": "#b4cad6",
+                "outline": "#767683",
+                "surface-dim": "#d9dadb",
+                "inverse-on-surface": "#f0f1f2",
+                "background": "#f8f9fa",
+                "on-surface-variant": "#454652",
+                "on-error": "#ffffff",
+                "primary": "#000666",
+                "on-secondary-fixed-variant": "#394951",
+                "on-secondary-container": "#55656d",
+                "secondary-fixed": "#d4e5ef",
+                "on-secondary-fixed": "#0d1e25",
+                "on-background": "#191c1d",
+                "surface-variant": "#e1e3e4",
+                "on-primary": "#ffffff",
+                "inverse-surface": "#2e3132"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Inter"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #000666 0%, #1a237e 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface min-h-screen pb-24">
+<!-- Top Navigation Anchor -->
+<header class="bg-slate-50 dark:bg-slate-950 shadow-sm dark:shadow-none border-b border-slate-200/15 dark:border-slate-800/15 docked full-width top-0 sticky z-50 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-indigo-900 dark:text-indigo-400" data-icon="gavel">gavel</span>
+<span class="text-lg font-bold tracking-[0.15em] text-indigo-950 dark:text-indigo-50">SOVEREIGN</span>
+</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Close-up professional portrait of a senior lawyer in a dark suit with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZQGJuyzNXZPOSWW8vjEJkmsxPuE8fIEPcjd2KpOoRq7Uh6l4w5z6I7v0ZXJPQT-ASO_JmX1yLj9GJBfJjYdEHHkt5BTxytxHtkaavYBXiyZQXs5urUUj9qocHGz49kY73FgJ1E2Ul0NWMLXd99znH371cb7Cpykcmt_w70LtAv6AwScwirKq3Oa4uQB0M52BpkjC6q5nyRvpeb6qKkPDJ8AfQpYDn9MNWJWKbWdk16H5c-HQCO57bxDTSPbyjCmc8VEZC6PnFZ_vs"/>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 py-8">
+<!-- Editorial Header Section -->
+<section class="mb-12">
+<h1 class="text-3xl font-bold tracking-tight text-primary mb-2">Nuevo Prospecto</h1>
+<p class="text-on-surface-variant text-sm max-w-lg">Capture la información esencial del cliente potencial. Utilice nuestra extracción por IA para capturas de pantalla o grabe notas de voz para transcripción automática.</p>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Intelligent Extraction -->
+<div class="lg:col-span-5 space-y-6">
+<!-- Image Upload / IA Extraction Bento Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(25,28,29,0.04)] transition-all">
+<div class="flex items-center justify-between mb-6">
+<span class="text-[10px] font-bold tracking-widest text-primary uppercase bg-primary-fixed px-2 py-1 rounded">IA EXTRACTION</span>
+<span class="material-symbols-outlined text-outline" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="border-2 border-dashed border-outline-variant/30 rounded-lg p-10 flex flex-col items-center justify-center bg-surface-container-low/50 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-outline mb-4 group-hover:text-primary transition-colors" data-icon="add_photo_alternate">add_photo_alternate</span>
+<p class="text-sm font-medium text-on-surface text-center">Cargar captura de WhatsApp</p>
+<p class="text-xs text-on-surface-variant mt-2 text-center">Formatos PNG, JPG soportados</p>
+</div>
+<div class="mt-8 flex items-center justify-center">
+<div class="h-[1px] bg-outline-variant/20 flex-grow"></div>
+<span class="px-4 text-[10px] font-bold text-outline uppercase tracking-tighter">O</span>
+<div class="h-[1px] bg-outline-variant/20 flex-grow"></div>
+</div>
+<!-- Voice Note Component -->
+<div class="mt-8">
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-high rounded-lg hover:bg-surface-container-highest transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="mic" style="font-variation-settings: 'FILL' 1;">mic</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-bold text-primary tracking-tight">Grabar Nota de Voz</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">AI Voice Transcriber</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="arrow_forward_ios">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Guidance Info -->
+<div class="bg-secondary-container/30 p-6 rounded-xl border-l-4 border-surface-tint">
+<h4 class="text-sm font-bold text-on-secondary-container mb-2">Consejo de Autoridad</h4>
+<p class="text-xs text-on-secondary-container/80 leading-relaxed">Al cargar una captura, la IA identificará automáticamente nombres, fechas y el tono legal de la conversación para clasificar la urgencia del caso.</p>
+</div>
+</div>
+<!-- Right Column: Manual Data Entry Form -->
+<div class="lg:col-span-7 bg-surface-container-lowest p-8 lg:p-10 rounded-xl shadow-[0_12px_32px_rgba(25,28,29,0.04)]">
+<form class="space-y-8">
+<!-- Name Field -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold tracking-wider text-secondary uppercase">Nombre Completo del Prospecto</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-b-2 border-outline/30 focus:border-primary focus:ring-0 focus:outline-none py-3 px-0 text-on-surface placeholder:text-outline transition-colors text-lg font-medium" placeholder="Ej. Lic. Gabriel Montenegro" type="text"/>
+</div>
+</div>
+<!-- Phone Field -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold tracking-wider text-secondary uppercase">Teléfono / WhatsApp</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-b-2 border-outline/30 focus:border-primary focus:ring-0 focus:outline-none py-3 px-0 text-on-surface placeholder:text-outline transition-colors text-lg font-medium" placeholder="+52 55 1234 5678" type="tel"/>
+</div>
+</div>
+<!-- Client Message Field -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold tracking-wider text-secondary uppercase">Mensaje o Detalles del Caso</label>
+<div class="relative group">
+<textarea class="w-full bg-surface-container-highest border-b-2 border-outline/30 focus:border-primary focus:ring-0 focus:outline-none py-3 px-0 text-on-surface placeholder:text-outline transition-colors leading-relaxed resize-none" placeholder="Describa el asunto legal del prospecto..." rows="5"></textarea>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-6 flex flex-col sm:flex-row gap-4 items-center justify-end">
+<button class="w-full sm:w-auto px-8 py-3 text-sm font-bold text-primary hover:bg-slate-100 transition-colors rounded-lg" type="button">
+                            DESCARTAR
+                        </button>
+<button class="w-full sm:w-auto px-12 py-4 primary-gradient text-on-primary text-sm font-bold tracking-widest rounded-lg shadow-lg hover:opacity-90 active:scale-95 transition-all" type="submit">
+                            CREAR PROSPECTO
+                        </button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-t border-slate-200/20 dark:border-slate-800/20 fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 z-50 rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-2 hover:text-indigo-700 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="dashboard">dashboard</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase mt-1">DASHBOARD</span>
+</a>
+<a class="flex flex-col items-center justify-center text-indigo-900 dark:text-indigo-300 bg-slate-100 dark:bg-indigo-950/50 rounded-xl px-3 py-2 scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase mt-1">NEW LEAD</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-2 hover:text-indigo-700 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="person_search">person_search</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase mt-1">CLIENTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-2 hover:text-indigo-700 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="history">history</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase mt-1">HISTORY</span>
+</a>
+</nav>
+</body></html>

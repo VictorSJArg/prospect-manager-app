@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#4c56af",
+                    "on-primary-fixed-variant": "#343d96",
+                    "on-tertiary-fixed-variant": "#354a53",
+                    "on-tertiary-container": "#859ba6",
+                    "surface-container": "#edeeef",
+                    "on-primary-fixed": "#000767",
+                    "surface": "#f8f9fa",
+                    "on-primary-container": "#8690ee",
+                    "on-surface": "#191c1d",
+                    "error": "#ba1a1a",
+                    "primary-container": "#1a237e",
+                    "secondary-container": "#d1e2ec",
+                    "secondary-fixed-dim": "#b8c9d3",
+                    "tertiary-fixed": "#cfe6f2",
+                    "secondary": "#506169",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "surface-container-highest": "#e1e3e4",
+                    "tertiary": "#071e27",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#bdc2ff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#1e333c",
+                    "primary-fixed": "#e0e0ff",
+                    "outline-variant": "#c6c5d4",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container-high": "#e7e8e9",
+                    "on-tertiary-fixed": "#071e27",
+                    "surface-container-low": "#f3f4f5",
+                    "tertiary-fixed-dim": "#b4cad6",
+                    "outline": "#767683",
+                    "surface-dim": "#d9dadb",
+                    "inverse-on-surface": "#f0f1f2",
+                    "background": "#f8f9fa",
+                    "on-surface-variant": "#454652",
+                    "on-error": "#ffffff",
+                    "primary": "#000666",
+                    "on-secondary-fixed-variant": "#394951",
+                    "on-secondary-container": "#55656d",
+                    "secondary-fixed": "#d4e5ef",
+                    "on-secondary-fixed": "#0d1e25",
+                    "on-background": "#191c1d",
+                    "surface-variant": "#e1e3e4",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2e3132"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .signature-gradient {
+            background: linear-gradient(135deg, #000666 0%, #1a237e 100%);
+        }
+        .glass-overlay {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-slate-50 dark:bg-slate-950 shadow-sm dark:shadow-none border-b border-slate-200/15 dark:border-slate-800/15 docked full-width top-0 sticky z-50 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-indigo-900 dark:text-indigo-400" data-icon="gavel">gavel</span>
+<h1 class="text-lg font-bold tracking-[0.15em] text-indigo-950 dark:text-indigo-50">SOVEREIGN</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+<span class="material-symbols-outlined text-slate-500" data-icon="search">search</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a lawyer in a dark suit with a neutral background, high-end photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGDMc4-nseYmyMATBgBFiMdG0TFTHScZOEPtNX4hgBIE3fKx0pPM8Z1eQO1hIXlh1Mbi9jnQTjRmdT68MFWz1OijP9PC8iq90WrLpE9p6FS0uoXLrYLK8XSSnUnVL05_N6pUyagURUmakNPxXu7h9icwufCatv3SP7lPZ79_H7oChkzbtg7F6rcllvJBn-WmbjmDaY8VqemsPaXH5V7UtatBIah8-tnwIGOPXsFa2Nq4YZrHdoeNgkXlklUvTitF-Hg-Ar9jjF0INK"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-8 text-secondary font-label text-[0.6875rem] uppercase tracking-wider">
+<span>CLIENTES</span>
+<span class="material-symbols-outlined text-[12px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-on-surface">FICHA PERSONAL</span>
+</nav>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Sidebar: Profile Header -->
+<aside class="md:col-span-4 space-y-6">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(25,28,29,0.04)] relative overflow-hidden">
+<!-- Status Indicator Token -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-tint"></div>
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container-low mb-4 ring-4 ring-surface overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a mature client in a professional setting, warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCreF0K1WSyCUKtKYZCXKmDtQZws7_OLeOTzYM5F6dPADTDXT2wTrp9QeCASKi95uPLUr9avOfSlhyJhc6-yypeBwedHQmUr36vzjg7riKAy3iO1BWQPbqZ0Udb0zGsxQE2jolCHgNNYlfoOEDILtX2BHhK9fJ4zDMlh-199uALb_4uoWO7l_erNzoeJf1blHOAOu3I9de1sjYoHIr6gYVIYTCWeq6CQfy6i7oN63d9CCH0r6GHNmV0LWKaJrwGXVK_ba32hILg9E--"/>
+</div>
+<h2 class="text-xl font-headline font-bold text-primary mb-1">Alejandro V. Garrido</h2>
+<span class="text-secondary font-label text-[0.6875rem] uppercase tracking-[0.05em] mb-4">CLIENTE ACTIVO</span>
+<div class="flex flex-wrap justify-center gap-2 mb-6">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded-full uppercase tracking-wider">CIVIL</span>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded-full uppercase tracking-wider">ALTA PRIORIDAD</span>
+</div>
+<div class="w-full space-y-4 text-left border-t border-outline-variant/15 pt-6">
+<div class="flex flex-col">
+<span class="text-secondary font-label text-[0.6875rem] uppercase tracking-wider">DNI / Identificación</span>
+<span class="text-on-surface font-medium">45.892.102-K</span>
+</div>
+<div class="flex flex-col">
+<span class="text-secondary font-label text-[0.6875rem] uppercase tracking-wider">Teléfono Contacto</span>
+<span class="text-on-surface font-medium">+34 612 458 902</span>
+</div>
+<div class="flex flex-col">
+<span class="text-secondary font-label text-[0.6875rem] uppercase tracking-wider">Correo Electrónico</span>
+<span class="text-on-surface font-medium">a.garrido@estudio-legal.com</span>
+</div>
+</div>
+<button class="w-full mt-8 py-3 signature-gradient text-on-primary font-semibold rounded-lg shadow-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+                            EDITAR PERFIL
+                        </button>
+</div>
+</div>
+<!-- Resumen de Situación (New Section) -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(25,28,29,0.04)] border-l-4 border-primary">
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="description">description</span>
+                        Resumen de Situación
+                    </h3>
+<div class="space-y-6">
+<div>
+<span class="text-secondary font-label text-[0.6875rem] uppercase tracking-wider block mb-1">Planteo del Cliente</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Reclamo por incumplimiento contractual de arrendamiento comercial y restitución de fianza retenida ilegalmente.</p>
+</div>
+<div>
+<span class="text-secondary font-label text-[0.6875rem] uppercase tracking-wider block mb-1">Análisis Realizado</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Existencia de cláusulas abusivas en el contrato de 2014. Viabilidad procesal alta para vía civil ordinaria.</p>
+</div>
+<div>
+<span class="text-secondary font-label text-[0.6875rem] uppercase tracking-wider block mb-1">Respuesta Enviada</span>
+<div class="bg-surface-container-low p-3 rounded-lg mt-1">
+<p class="text-sm text-on-surface italic font-medium">"Se ha procedido a la redacción de la demanda civil. Pendiente de firma para radicación inmediata."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Stats Bento Card -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl">
+<span class="text-secondary font-label text-[0.6875rem] uppercase block mb-1">Vigencia</span>
+<span class="text-lg font-bold text-primary">3.2 Años</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl">
+<span class="text-secondary font-label text-[0.6875rem] uppercase block mb-1">Casos</span>
+<span class="text-lg font-bold text-primary">04</span>
+</div>
+</div>
+</aside>
+<!-- Main Content: Information & Timeline -->
+<div class="md:col-span-8 space-y-8">
+<!-- Information Exchange Section -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_12px_32px_rgba(25,28,29,0.04)] overflow-hidden">
+<div class="px-8 py-6 border-b border-outline-variant/15 flex justify-between items-center">
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary">Resumen de Información</h3>
+<span class="material-symbols-outlined text-secondary" data-icon="info">info</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2">
+<div class="p-8 border-r border-outline-variant/15">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-indigo-400" data-icon="arrow_downward">arrow_downward</span>
+<h4 class="text-xs font-bold uppercase text-secondary">Recibida del Cliente</h4>
+</div>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-2"></span>
+<p class="text-sm text-on-surface-variant">Documentación original de propiedad (Escritura 2014).</p>
+</li>
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-2"></span>
+<p class="text-sm text-on-surface-variant">Extractos bancarios del último trimestre fiscal.</p>
+</li>
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-2"></span>
+<p class="text-sm text-on-surface-variant">Contrato de arrendamiento sujeto a litigio.</p>
+</li>
+</ul>
+</div>
+<div class="p-8">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary-container" data-icon="arrow_upward">arrow_upward</span>
+<h4 class="text-xs font-bold uppercase text-secondary">Brindada al Cliente</h4>
+</div>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mt-2"></span>
+<p class="text-sm text-on-surface-variant font-medium">Informe de viabilidad procesal (Fase 1).</p>
+</li>
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mt-2"></span>
+<p class="text-sm text-on-surface-variant">Presupuesto de honorarios y gastos judiciales.</p>
+</li>
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mt-2"></span>
+<p class="text-sm text-on-surface-variant">Hoja de ruta estratégica para conciliación.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Legal Timeline Section (Expediente) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_12px_32px_rgba(25,28,29,0.04)] p-8">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary mb-1">Expediente Jurídico</h3>
+<p class="text-xs text-secondary">Historial cronológico de actuaciones y estados del caso.</p>
+</div>
+<button class="px-4 py-2 bg-surface-container-high text-primary font-semibold text-xs rounded uppercase tracking-wider hover:bg-surface-container-highest transition-colors">
+                            VER TODO EL HISTORIAL
+                        </button>
+</div>
+<div class="relative pl-8 border-l border-outline-variant/30 space-y-10">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-primary ring-4 ring-surface flex items-center justify-center">
+<div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+<span class="text-primary font-bold text-sm">Presentación de Demanda Civil</span>
+<span class="text-[0.6875rem] font-label text-secondary uppercase bg-surface-container-low px-2 py-0.5 rounded">HOY, 14:30</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-2 max-w-2xl">Radicación formal ante el Juzgado de lo Civil Nro 4. Asignación de número de expediente 4458/24.</p>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-outline-variant ring-4 ring-surface"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+<span class="text-on-surface font-bold text-sm">Validación de Poder Notarial</span>
+<span class="text-[0.6875rem] font-label text-secondary uppercase">12 OCT, 2023</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-2">Verificación de facultades de representación legal completada satisfactoriamente.</p>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-outline-variant ring-4 ring-surface"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+<span class="text-on-surface font-bold text-sm">Entrevista Inicial de Diagnóstico</span>
+<span class="text-[0.6875rem] font-label text-secondary uppercase">05 OCT, 2023</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-2">Reunión presencial para definir el alcance del litigio y recopilación de pruebas primarias.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase">DASHBOARD</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase">NEW LEAD</span>
+</a>
+<a class="flex flex-col items-center justify-center text-indigo-900 dark:text-indigo-300 bg-slate-100 dark:bg-indigo-950/50 rounded-xl px-3 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase">CLIENTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-sans text-[10px] font-semibold tracking-wider uppercase">HISTORY</span>
+</a>
+</nav>
+</body></html>

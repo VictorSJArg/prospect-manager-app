@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "A potential client or case.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name of the prospect." },
+        "phone": { "type": "string", "description": "Phone number or WhatsApp." },
+        "details": { "type": "string", "description": "Case details or message." },
+        "status": { "type": "string", "enum": ["Sin Análisis", "Analizado", "En Proceso", "Urgente"], "description": "Current status." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp." },
+        "userId": { "type": "string", "description": "ID of the user who created the lead." }
+      },
+      "required": ["name", "status", "createdAt", "userId"]
+    },
+    "Interaction": {
+      "title": "Interaction",
+      "description": "A communication or event related to a lead.",
+      "type": "object",
+      "properties": {
+        "leadId": { "type": "string", "description": "ID of the associated lead." },
+        "type": { "type": "string", "enum": ["text", "audio", "image", "system"], "description": "Type of interaction." },
+        "content": { "type": "string", "description": "Text content, transcription, or file URL." },
+        "sender": { "type": "string", "enum": ["client", "firm"], "description": "Who sent the message." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp." },
+        "userId": { "type": "string", "description": "ID of the user who owns this interaction." }
+      },
+      "required": ["leadId", "type", "content", "sender", "createdAt", "userId"]
+    }
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Stores leads created by the firm."
+    },
+    "/interactions/{interactionId}": {
+      "schema": "Interaction",
+      "description": "Stores interactions for leads."
+    }
+  }
+}
