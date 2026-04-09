@@ -9,15 +9,26 @@ export default function Login() {
     if (loading) return;
     setLoading(true);
     setError('');
+    
+    // Timeout de seguridad de 15 segundos
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+      setError('Tiempo de espera agotado. Revisa si la ventana de Google quedó oculta detrás de esta.');
+    }, 15000);
+
     try {
       await signInWithGoogle();
+      clearTimeout(timeoutId);
     } catch (err: any) {
-      if (err.code === 'auth/cancelled-popup-request') {
-        setError('El inicio de sesión fue cancelado. Por favor, inténtalo de nuevo.');
+      clearTimeout(timeoutId);
+      if (err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user') {
+        setError('Cancelaste el inicio de sesión o la ventana se cerró.');
       } else if (err.code === 'auth/popup-blocked') {
-        setError('El navegador bloqueó la ventana emergente. Por favor, permite las ventanas emergentes para este sitio.');
+        setError('Tu navegador bloqueó la ventana de Google. Por favor, desactiva tu bloqueador de anuncios o permite ventanas emergentes.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError('Firebase bloqueó el acceso. Asegúrate de haber agregado este dominio a Firebase.');
       } else {
-        setError('Error al iniciar sesión. Por favor, inténtalo de nuevo.');
+        setError('Error: ' + (err.message || 'Inténtalo de nuevo.'));
       }
       setLoading(false);
     }
