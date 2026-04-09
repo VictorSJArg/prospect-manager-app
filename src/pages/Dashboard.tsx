@@ -425,6 +425,12 @@ export default function Dashboard() {
                             <p className="text-[0.6875rem] font-semibold text-secondary tracking-wider uppercase truncate">
                               {lead.dni ? `DNI: ${lead.dni}` : 'SIN DNI'}
                             </p>
+                            {lead.profession && (
+                              <p className="text-[0.6875rem] text-primary/70 font-medium truncate flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[11px]">work</span>
+                                {lead.profession}
+                              </p>
+                            )}
                           </div>
                         </div>
 
