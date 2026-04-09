@@ -1,5 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
@@ -7,21 +14,40 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
-export const signInWithGoogle = async () => {
-  const provider = new GoogleAuthProvider();
-  // signInWithRedirect redirige al usuario a Google directamente
-  // sin necesidad de popup (más compatible con todos los navegadores)
-  await signInWithRedirect(auth, provider);
+const provider = new GoogleAuthProvider();
+
+/**
+ * Intenta popup primero (instantáneo). Si el navegador lo bloquea,
+ * usa redirect como fallback.
+ */
+export const signInWithGoogle = async (): Promise<void> => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (popupError: any) {
+    // Solo usar redirect si el popup fue bloqueado por el navegador
+    if (
+      popupError.code === 'auth/popup-blocked' ||
+      popupError.code === 'auth/popup-closed-by-user' ||
+      popupError.code === 'auth/cancelled-popup-request'
+    ) {
+      await signInWithRedirect(auth, provider);
+    } else {
+      throw popupError;
+    }
+  }
 };
 
-// Procesar el resultado del redirect cuando el usuario vuelve
-export const processRedirectResult = async () => {
+/**
+ * Llama esto al montar la app para procesar cualquier redirect pendiente.
+ * Retorna error string si falla, null si ok.
+ */
+export const processRedirectResult = async (): Promise<string | null> => {
   try {
-    const result = await getRedirectResult(auth);
-    return result;
-  } catch (error) {
-    console.error("Error processing redirect result:", error);
-    throw error;
+    await getRedirectResult(auth);
+    return null;
+  } catch (error: any) {
+    console.error('getRedirectResult error:', error.code, error.message);
+    return error.message || error.code || 'Unknown error';
   }
 };
 
@@ -29,7 +55,7 @@ export const logOut = async () => {
   try {
     await signOut(auth);
   } catch (error) {
-    console.error("Error signing out", error);
+    console.error('Error signing out', error);
   }
 };
 
@@ -79,7 +105,7 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     },
     operationType,
     path
-  }
+  };
   console.error('Firestore Error: ', JSON.stringify(errInfo));
   throw new Error(JSON.stringify(errInfo));
 }

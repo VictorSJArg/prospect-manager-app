@@ -5,45 +5,40 @@ import { auth, processRedirectResult } from '../firebase';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  redirectError: string | null;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
+const AuthContext = createContext<AuthContextType>({ user: null, loading: true, redirectError: null });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [redirectError, setRedirectError] = useState<string | null>(null);
 
   useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-
+    // Procesar resultado de redirect primero antes de suscribir al estado
     const init = async () => {
-      // Primero procesamos el resultado del redirect (si viene de Google)
-      // Esto actualiza auth.currentUser internamente antes de que
-      // onAuthStateChanged lo detecte
-      try {
-        await processRedirectResult();
-      } catch (err) {
-        console.error('Redirect result error:', err);
-      }
+      const err = await processRedirectResult();
+      if (err) setRedirectError(err);
 
-      // Ahora escuchamos los cambios de auth (ya tiene el usuario actualizado)
-      unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      // Suscribir DESPUÉS de procesar redirect
+      const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
         setUser(firebaseUser);
         setLoading(false);
       });
+
+      return unsubscribe;
     };
 
-    init();
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    let cleanup: (() => void) | undefined;
+    init().then(unsub => { cleanup = unsub; });
+    return () => { if (cleanup) cleanup(); };
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, redirectError }}>
       {loading ? (
         <div className="min-h-screen bg-surface flex flex-col items-center justify-center gap-4">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
