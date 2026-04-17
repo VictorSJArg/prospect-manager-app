@@ -163,6 +163,7 @@ export default function NewLead() {
         status: 'Sin Análisis',
         createdAt: serverTimestamp(),
         userId: user.uid,
+        userName: user.displayName || user.email || 'Usuario',
       });
       navigate(`/clients/${docRef.id}`);
     } catch (error: any) {
