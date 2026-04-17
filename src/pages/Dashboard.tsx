@@ -172,10 +172,10 @@ export default function Dashboard() {
     const isUpdated = !isNewLead && isRecentAction;
 
     const isNew24h = leadTime > 0 && (now.getTime() - leadTime) < 24 * 60 * 60 * 1000;
-    const isUpdated24h = !isNew24h && actionTime > 0 && (now.getTime() - actionTime) < 24 * 60 * 60 * 1000 && actionIsAfterCreation;
+    const isUpdated24h = actionTime > 0 && (now.getTime() - actionTime) < 24 * 60 * 60 * 1000 && actionIsAfterCreation;
 
     if (newsFilter === 'Nuevos' && !isNew24h) return false;
-    if (newsFilter === 'Actualizados' && !isUpdated24h) return false;
+    if (newsFilter === 'Actualizados' && !isUpdated24h && !isNew24h) return false;
     
     if (newsFilter === 'Personalizado') {
       const sDate = customStartDate ? new Date(customStartDate + 'T00:00:00').getTime() : 0;
