@@ -92,7 +92,7 @@ export default function Dashboard() {
     const q = query(
       collection(db, 'leads'),
       orderBy('createdAt', 'desc'),
-      limit(50)
+      limit(1000)
     );
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const leadsData = snapshot.docs.map((d) => ({
