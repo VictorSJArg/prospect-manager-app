@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { buildLeadContactFields } from '../utils/contact';
@@ -27,11 +27,25 @@ export default function NewLead() {
   const [email, setEmail] = useState('');
   const [dni, setDni] = useState('');
   const [details, setDetails] = useState('');
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [loading, setLoading] = useState(false);
   const [aiError, setAiError] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const settingsDoc = await getDoc(doc(db, 'settings', 'general'));
+        if (settingsDoc.exists() && settingsDoc.data().templates) {
+          setTemplates(settingsDoc.data().templates);
+        }
+      } catch (err) {}
+    };
+    fetchSettings();
+  }, []);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -164,6 +178,7 @@ export default function NewLead() {
         ...buildLeadContactFields(phone, email, { initializeCampaignConsent: true }),
         dni,
         details,
+        selectedTemplateId: selectedTemplateId || null,
         status: 'Sin Análisis',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -309,6 +324,21 @@ export default function NewLead() {
                 className="w-full bg-surface-container-highest border-b-2 border-outline/30 focus:border-primary focus:ring-0 focus:outline-none py-3 px-0 text-on-surface placeholder:text-outline transition-colors text-lg font-medium"
                 placeholder="correo@ejemplo.com"
               />
+            </div>
+
+            {/* Email Template Selection */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold tracking-wider text-secondary uppercase block">Plantilla de Email (Campaña n8n)</label>
+              <select
+                value={selectedTemplateId}
+                onChange={(e) => setSelectedTemplateId(e.target.value)}
+                className="w-full bg-surface-container-highest border-b-2 border-outline/30 focus:border-primary focus:ring-0 focus:outline-none py-3 px-0 text-on-surface transition-colors font-medium cursor-pointer"
+              >
+                <option value="">(Usar plantilla activa global)</option>
+                {templates.map((t) => (
+                  <option key={t.id} value={t.id}>{t.name}</option>
+                ))}
+              </select>
             </div>
 
             {/* Client Message Field */}

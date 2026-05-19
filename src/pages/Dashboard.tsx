@@ -11,6 +11,7 @@ const DEFAULT_WIDTHS = {
   phone: 140,
   status: 140,
   priority: 130,
+  template: 140,
   details: 300,
   message: 300,
   observation: 250,
@@ -33,6 +34,7 @@ export default function Dashboard() {
   const [showHighPotential, setShowHighPotential] = useState(false);
   const [availablePriorities, setAvailablePriorities] = useState<string[]>(['Baja', 'Media', 'Alta', 'Crítica']);
   const [availableStatuses, setAvailableStatuses] = useState<string[]>(['Sin Análisis', 'Analizado', 'En Proceso', 'Citado', 'Urgente', 'Finalizado', 'Archivado']);
+  const [templates, setTemplates] = useState<any[]>([]);
   const [dbError, setDbError] = useState<string | null>(null);
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null);
   const [editDetailsDraft, setEditDetailsDraft] = useState('');
@@ -72,15 +74,17 @@ export default function Dashboard() {
     window.addEventListener('mouseup', stopDrag);
   };
 
-  const gridTemplate = `${columns.name}px ${columns.phone}px ${columns.status}px ${columns.priority}px ${columns.details}px ${columns.message}px ${columns.observation}px ${columns.action}px`;
+  const gridTemplate = `${columns.name}px ${columns.phone}px ${columns.status}px ${columns.priority}px ${columns.template}px ${columns.details}px ${columns.message}px ${columns.observation}px ${columns.action}px`;
 
   useEffect(() => {
     const loadSettings = async () => {
       try {
         const docSnap = await getDoc(doc(db, 'settings', 'general'));
         if (docSnap.exists()) {
-          if (docSnap.data().priorities) setAvailablePriorities(docSnap.data().priorities);
-          if (docSnap.data().statuses) setAvailableStatuses(docSnap.data().statuses);
+          const sData = docSnap.data();
+          if (sData.priorities) setAvailablePriorities(sData.priorities);
+          if (sData.statuses) setAvailableStatuses(sData.statuses);
+          if (sData.templates) setTemplates(sData.templates);
         }
       } catch (error) {}
     };
@@ -448,6 +452,7 @@ export default function Dashboard() {
                 { id: 'phone', label: 'Teléfono' },
                 { id: 'status', label: 'Estado' },
                 { id: 'priority', label: 'Prioridad' },
+                { id: 'template', label: 'Plantilla' },
                 { id: 'details', label: 'Resumen' },
                 { id: 'message', label: 'Mensaje Enviado' },
                 { id: 'observation', label: 'Última Observación' },
@@ -573,6 +578,23 @@ export default function Dashboard() {
                               {format(new Date(lead.followUpDate + 'T00:00:00'), 'dd/MM')}
                             </div>
                           )}
+                        </div>
+
+                        {/* Template */}
+                        <div className="w-full min-w-0" onClick={(e) => e.stopPropagation()}>
+                          <div className="relative">
+                            <select
+                              value={lead.selectedTemplateId || ''}
+                              onChange={(e) => updateDoc(doc(db, 'leads', lead.id), { selectedTemplateId: e.target.value || null, updatedAt: serverTimestamp() })}
+                              className="text-xs font-semibold text-secondary pl-2 pr-6 py-1.5 rounded-lg w-full cursor-pointer focus:ring-1 focus:ring-primary truncate appearance-none border-0 bg-transparent hover:bg-surface-container-highest transition-colors"
+                            >
+                              <option value="">(Global)</option>
+                              {templates.map(t => (
+                                <option key={t.id} value={t.id}>{t.name}</option>
+                              ))}
+                            </select>
+                            <span className="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 text-[14px] pointer-events-none opacity-50">expand_more</span>
+                          </div>
                         </div>
 
                         {/* Details Editable */}

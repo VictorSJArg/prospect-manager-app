@@ -22,6 +22,8 @@ export default function ClientProfile() {
   const [changingPriority, setChangingPriority] = useState(false);
   const [changingHighPotential, setChangingHighPotential] = useState(false);
   const [changingFollowUp, setChangingFollowUp] = useState(false);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [changingTemplate, setChangingTemplate] = useState(false);
 
   // Profile editing state
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -67,8 +69,10 @@ export default function ClientProfile() {
       try {
         const settingsDoc = await getDoc(doc(db, 'settings', 'general'));
         if (settingsDoc.exists()) {
-          if (settingsDoc.data().statuses) setStatuses(settingsDoc.data().statuses);
-          if (settingsDoc.data().priorities) setPriorities(settingsDoc.data().priorities);
+          const sData = settingsDoc.data();
+          if (sData.statuses) setStatuses(sData.statuses);
+          if (sData.priorities) setPriorities(sData.priorities);
+          if (sData.templates) setTemplates(sData.templates);
         }
       } catch (_) { /* use defaults */ }
     };
@@ -295,6 +299,38 @@ export default function ClientProfile() {
                     </select>
                     <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none opacity-50">unfold_more</span>
                   </div>
+                </div>
+              </div>
+
+              {/* Email Template for campaigns */}
+              <div className="w-full mb-6 text-left">
+                <label className="text-secondary font-label text-[0.6875rem] uppercase tracking-wider block mb-2">
+                  <span className="material-symbols-outlined text-[14px] align-text-bottom mr-1">mail</span>
+                  Plantilla de Email (Campaña n8n)
+                </label>
+                <div className="relative">
+                  <select
+                    value={lead.selectedTemplateId || ''}
+                    onChange={async (e) => {
+                      const newTemplateId = e.target.value || null;
+                      setChangingTemplate(true);
+                      try {
+                        await updateDoc(doc(db, 'leads', id!), { selectedTemplateId: newTemplateId, updatedAt: serverTimestamp() });
+                        setLead((prev: any) => ({ ...prev, selectedTemplateId: newTemplateId }));
+                      } catch (err) {
+                        console.error('Error updating template:', err);
+                      }
+                      setChangingTemplate(false);
+                    }}
+                    disabled={changingTemplate}
+                    className="w-full appearance-none bg-surface-container-low border border-outline-variant/20 rounded-lg px-3 py-2.5 pr-8 text-[0.8125rem] font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <option value="">(Usar plantilla activa global)</option>
+                    {templates.map((t) => (
+                      <option key={t.id} value={t.id}>{t.name}</option>
+                    ))}
+                  </select>
+                  <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-secondary pointer-events-none">unfold_more</span>
                 </div>
               </div>
 

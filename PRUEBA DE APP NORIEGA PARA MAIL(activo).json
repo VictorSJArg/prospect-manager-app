@@ -14,29 +14,6 @@
     },
     {
       "parameters": {
-        "url": "https://prospect-manager-app.vercel.app/api/n8n/active-template",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer n8n_prospect_api_token_582914"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "obtener-plantilla-activa-id",
-      "name": "Obtener Plantilla Activa",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        450,
-        110
-      ]
-    },
-    {
-      "parameters": {
         "url": "https://prospect-manager-app.vercel.app/api/n8n/leads",
         "sendQuery": true,
         "queryParameters": {
@@ -71,7 +48,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        650,
+        450,
         110
       ]
     },
@@ -85,7 +62,7 @@
       "type": "n8n-nodes-base.itemLists",
       "typeVersion": 3,
       "position": [
-        850,
+        650,
         110
       ]
     },
@@ -93,8 +70,8 @@
       "parameters": {
         "fromEmail": "noriegaestudio@gmail.com",
         "toEmail": "={{ $json.mail }}",
-        "subject": "={{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"subject\"].replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $json.name || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $json.dni || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $json.phone || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $json.mail || '') }}",
-        "text": "={{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"content\"].replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $json.name || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $json.dni || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $json.phone || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $json.mail || '') }}",
+        "subject": "={{ $json.template ? $json.template.subject.replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $json.name || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $json.dni || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $json.phone || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $json.mail || '') : '' }}",
+        "text": "={{ $json.template ? $json.template.content.replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $json.name || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $json.dni || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $json.phone || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $json.mail || '') : '' }}",
         "options": {}
       },
       "id": "enviar-email-smtp-id",
@@ -102,7 +79,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
       "position": [
-        1050,
+        850,
         110
       ]
     },
@@ -121,7 +98,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"channel\": \"email\",\n  \"to\": \"{{ $node[\"Separar Lista de Prospectos\"].json[\"mail\"] }}\",\n  \"subject\": \"{{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"subject\"].replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"name\"] || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"dni\"] || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"phone\"] || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"mail\"] || '') }}\",\n  \"content\": \"{{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"content\"].replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"name\"] || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"dni\"] || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"phone\"] || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"mail\"] || '') }}\",\n  \"status\": \"sent\",\n  \"campaignId\": \"{{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"name\"] }}\"\n}",
+        "jsonBody": "={\n  \"channel\": \"email\",\n  \"to\": \"{{ $node[\"Separar Lista de Prospectos\"].json[\"mail\"] }}\",\n  \"subject\": \"{{ $node[\"Separar Lista de Prospectos\"].json[\"template\"] ? $node[\"Separar Lista de Prospectos\"].json[\"template\"][\"subject\"].replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"name\"] || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"dni\"] || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"phone\"] || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"mail\"] || '') : '' }}\",\n  \"content\": \"{{ $node[\"Separar Lista de Prospectos\"].json[\"template\"] ? $node[\"Separar Lista de Prospectos\"].json[\"template\"][\"content\"].replace(new RegExp('\\\\{\\\\{nombre\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"name\"] || '').replace(new RegExp('\\\\{\\\\{dni\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"dni\"] || '').replace(new RegExp('\\\\{\\\\{telefono\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"phone\"] || '').replace(new RegExp('\\\\{\\\\{email\\\\}\\\\}', 'g'), $node[\"Separar Lista de Prospectos\"].json[\"mail\"] || '') : '' }}\",\n  \"status\": \"sent\",\n  \"campaignId\": \"{{ $node[\"Separar Lista de Prospectos\"].json[\"template\"] ? $node[\"Separar Lista de Prospectos\"].json[\"template\"][\"name\"] : 'default' }}\"\n}",
         "options": {}
       },
       "id": "af0ec33c-36a3-4ac1-89f4-bb8b14acf4be",
@@ -129,24 +106,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1250,
+        1050,
         110
       ]
     }
   ],
   "connections": {
     "Manual Trigger": {
-      "main": [
-        [
-          {
-            "node": "Obtener Plantilla Activa",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Obtener Plantilla Activa": {
       "main": [
         [
           {

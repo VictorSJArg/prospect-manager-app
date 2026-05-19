@@ -67,10 +67,25 @@ export default async function handler(req: any, res: any) {
 
     leads = leads.slice(0, limit);
 
+    // Fetch templates to resolve template content for each lead
+    const settingsDoc = await db.collection('settings').doc('general').get();
+    const settingsData = settingsDoc.exists ? settingsDoc.data() || {} : {};
+    const templates = settingsData.templates || [];
+    const activeTemplateId = settingsData.activeTemplateId || null;
+
+    const resolvedLeads = leads.map((lead: any) => {
+      const templateId = lead.selectedTemplateId || activeTemplateId;
+      const template = templates.find((t: any) => t.id === templateId) || null;
+      return {
+        ...lead,
+        template,
+      };
+    });
+
     sendJson(res, 200, {
-      data: leads,
+      data: resolvedLeads,
       meta: {
-        count: leads.length,
+        count: resolvedLeads.length,
         fetched: snapshot.size,
         limit,
       },
