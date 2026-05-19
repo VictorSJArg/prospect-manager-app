@@ -1,6 +1,11 @@
 {
   "name": "prospect-manager-app",
   "rewrites": [
+    { "source": "/api/n8n/leads/:id/log-message", "destination": "/api/n8n/leads/[id]/log-message" },
+    { "source": "/api/n8n/leads/:id/opt-out", "destination": "/api/n8n/leads/[id]/opt-out" },
+    { "source": "/api/n8n/leads/:id/email", "destination": "/api/n8n/leads/[id]/email" },
+    { "source": "/api/n8n/leads/:id/messages", "destination": "/api/n8n/leads/[id]/messages" },
+    { "source": "/api/n8n/leads/:id", "destination": "/api/n8n/leads/[id]" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/" }
   ]
