@@ -1,6 +1,7 @@
 {
   "name": "prospect-manager-app",
   "rewrites": [
+    { "source": "/api/n8n/active-template", "destination": "/api/n8n/active-template" },
     { "source": "/api/n8n/leads/:id/log-message", "destination": "/api/n8n/leads/[id]/log-message" },
     { "source": "/api/n8n/leads/:id/opt-out", "destination": "/api/n8n/leads/[id]/opt-out" },
     { "source": "/api/n8n/leads/:id/email", "destination": "/api/n8n/leads/[id]/email" },

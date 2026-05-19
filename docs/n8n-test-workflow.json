@@ -1,0 +1,127 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "27685942-88ec-4ea5-8946-b3334237199c",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://prospect-manager-app.vercel.app/api/n8n/leads",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "2"
+            },
+            {
+              "name": "hasContact",
+              "value": "true"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer n8n_prospect_api_token_582914"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a9cde123-b1d4-4fca-89a1-000a6e3551a3",
+      "name": "Obtener Prospectos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "e843c08f-287d-4116-86c2-491b45281895",
+      "name": "Separar Lista de Prospectos",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://prospect-manager-app.vercel.app/api/n8n/leads/{{ $json.id }}/log-message",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer n8n_prospect_api_token_582914"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"channel\": \"email\",\n  \"to\": \"{{ $json.mail }}\",\n  \"subject\": \"Prueba de integración n8n\",\n  \"content\": \"Hola {{ $json.name }}, este mensaje es para validar la integración automática.\",\n  \"status\": \"sent\",\n  \"campaignId\": \"test-workflow\"\n}",
+        "options": {}
+      },
+      "id": "7dc8617d-2e11-43ef-b2cf-b30f87edc9c0",
+      "name": "Registrar Mensaje Enviado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        850,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Obtener Prospectos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Prospectos": {
+      "main": [
+        [
+          {
+            "node": "Separar Lista de Prospectos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar Lista de Prospectos": {
+      "main": [
+        [
+          {
+            "node": "Registrar Mensaje Enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
