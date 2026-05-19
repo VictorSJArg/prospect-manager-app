@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, query, orderBy, onSnapshot, limit, where, getDocs, updateDoc, doc, deleteDoc, writeBatch, getDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, limit, where, getDocs, updateDoc, doc, deleteDoc, writeBatch, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -198,6 +198,8 @@ export default function Dashboard() {
     return (
       lead.name?.toLowerCase().includes(term) ||
       lead.phone?.toLowerCase().includes(term) ||
+      lead.email?.toLowerCase().includes(term) ||
+      lead.mail?.toLowerCase().includes(term) ||
       lead.dni?.toLowerCase().includes(term) ||
       lead.profession?.toLowerCase().includes(term)
     );
@@ -223,7 +225,7 @@ export default function Dashboard() {
     try {
       const sep = ' | ';
       const lines: string[] = [];
-      lines.push(['Nombre', 'DNI', 'Telefono', 'Estado', 'Prioridad', 'Resumen', 'Mensaje Enviado', 'Ultima Observacion', 'Fecha de Carga', 'Ultima Accion'].join(sep));
+      lines.push(['Nombre', 'DNI', 'Telefono', 'Mail', 'Estado', 'Prioridad', 'Resumen', 'Mensaje Enviado', 'Ultima Observacion', 'Fecha de Carga', 'Ultima Accion'].join(sep));
 
       for (const lead of filteredLeads) {
         const lastAction = lastActions[lead.id];
@@ -238,6 +240,7 @@ export default function Dashboard() {
           clean(lead.name),
           clean(lead.dni),
           clean(lead.phone),
+          clean(lead.email || lead.mail),
           clean(lead.status || 'Sin Analisis'),
           clean(lead.priority || 'Media'),
           clean(lead.details),
@@ -346,7 +349,7 @@ export default function Dashboard() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-14 pr-6 py-5 bg-surface-container-lowest border-0 border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 text-lg transition-all rounded-t-xl shadow-sm placeholder:text-outline/60"
-              placeholder="Búsqueda por DNI, Nombre, Teléfono o Profesión..."
+              placeholder="Búsqueda por DNI, Nombre, Teléfono, Mail o Profesión..."
             />
           </div>
           {/* Status and Priority Filters */}
@@ -537,7 +540,7 @@ export default function Dashboard() {
                             <span className={`absolute left-2 w-2 h-2 rounded-full flex-shrink-0 pointer-events-none z-10 ${getStatusColor(lead.status)}`}></span>
                             <select
                               value={lead.status || 'Sin Análisis'}
-                              onChange={(e) => updateDoc(doc(db, 'leads', lead.id), { status: e.target.value })}
+                              onChange={(e) => updateDoc(doc(db, 'leads', lead.id), { status: e.target.value, updatedAt: serverTimestamp() })}
                               className="text-xs font-medium text-on-surface-variant pl-6 pr-6 py-1.5 rounded-lg w-full cursor-pointer focus:ring-1 focus:ring-primary truncate appearance-none border-0 bg-transparent hover:bg-surface-container-highest transition-colors"
                             >
                               {!lead.status && <option value="Sin Análisis">Sin Análisis</option>}
@@ -554,7 +557,7 @@ export default function Dashboard() {
                           <div className="relative">
                             <select
                               value={lead.priority || 'Media'}
-                              onChange={(e) => updateDoc(doc(db, 'leads', lead.id), { priority: e.target.value })}
+                              onChange={(e) => updateDoc(doc(db, 'leads', lead.id), { priority: e.target.value, updatedAt: serverTimestamp() })}
                               className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1.5 rounded-lg w-full cursor-pointer focus:ring-1 focus:ring-primary truncate appearance-none border-0 ${lead.priority === 'Crítica' || lead.priority === 'Alta' ? 'bg-error-container text-error' : lead.priority === 'Media' ? 'bg-surface-tint text-on-primary' : 'bg-surface-container-highest text-secondary'}`}
                             >
                               {!lead.priority && <option value="Media">Media</option>}
@@ -586,7 +589,7 @@ export default function Dashboard() {
                               <div className="flex flex-col items-center justify-start gap-1 absolute top-1 right-1 opacity-100">
                                 <button onClick={async () => {
                                   try {
-                                    await updateDoc(doc(db, 'leads', lead.id), { details: editDetailsDraft });
+                                    await updateDoc(doc(db, 'leads', lead.id), { details: editDetailsDraft, updatedAt: serverTimestamp() });
                                   } catch(e) {}
                                   setEditingLeadId(null);
                                 }} className="w-5 h-5 flex items-center justify-center text-white bg-primary rounded shadow-sm hover:scale-110 transition-transform">

@@ -5,6 +5,7 @@ import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { format, formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { buildLeadContactFields } from '../utils/contact';
 
 export default function ClientProfile() {
   const { id } = useParams<{ id: string }>();
@@ -228,7 +229,7 @@ export default function ClientProfile() {
                     const newValue = !lead.isHighPotential;
                     setChangingHighPotential(true);
                     try {
-                      await updateDoc(doc(db, 'leads', id!), { isHighPotential: newValue });
+                      await updateDoc(doc(db, 'leads', id!), { isHighPotential: newValue, updatedAt: serverTimestamp() });
                       setLead((prev: any) => ({ ...prev, isHighPotential: newValue }));
                     } catch (err) {}
                     setChangingHighPotential(false);
@@ -253,7 +254,7 @@ export default function ClientProfile() {
                         const newStatus = e.target.value;
                         setChangingStatus(true);
                         try {
-                          await updateDoc(doc(db, 'leads', id!), { status: newStatus });
+                          await updateDoc(doc(db, 'leads', id!), { status: newStatus, updatedAt: serverTimestamp() });
                           setLead((prev: any) => ({ ...prev, status: newStatus }));
                         } catch (err) {
                           console.error('Error updating status:', err);
@@ -279,7 +280,7 @@ export default function ClientProfile() {
                         const newPriority = e.target.value;
                         setChangingPriority(true);
                         try {
-                          await updateDoc(doc(db, 'leads', id!), { priority: newPriority });
+                          await updateDoc(doc(db, 'leads', id!), { priority: newPriority, updatedAt: serverTimestamp() });
                           setLead((prev: any) => ({ ...prev, priority: newPriority }));
                         } catch (err) { }
                         setChangingPriority(false);
@@ -311,7 +312,7 @@ export default function ClientProfile() {
                       const newDate = e.target.value;
                       setChangingFollowUp(true);
                       try {
-                        await updateDoc(doc(db, 'leads', id!), { followUpDate: newDate || null });
+                        await updateDoc(doc(db, 'leads', id!), { followUpDate: newDate || null, updatedAt: serverTimestamp() });
                         setLead((prev: any) => ({ ...prev, followUpDate: newDate || null }));
                       } catch (err) {}
                       setChangingFollowUp(false);
@@ -356,8 +357,13 @@ export default function ClientProfile() {
                        onClick={async () => {
                          setSavingProfile(true);
                          try {
-                           await updateDoc(doc(db, 'leads', id!), profileDraft);
-                           setLead((prev: any) => ({ ...prev, ...profileDraft }));
+                           const contactFields = buildLeadContactFields(profileDraft.phone, profileDraft.email);
+                           await updateDoc(doc(db, 'leads', id!), {
+                             ...profileDraft,
+                             ...contactFields,
+                             updatedAt: serverTimestamp(),
+                           });
+                           setLead((prev: any) => ({ ...prev, ...profileDraft, ...contactFields }));
                            setIsEditingProfile(false);
                          } catch (err: any) {
                            console.error('Error updating profile:', err);
@@ -391,10 +397,10 @@ export default function ClientProfile() {
                     <span className="text-secondary font-label text-[0.6875rem] uppercase tracking-wider">Teléfono Contacto</span>
                     <span className="text-on-surface font-medium">{lead.phone || 'No registrado'}</span>
                   </div>
-                  {lead.email && (
+                  {(lead.email || lead.mail) && (
                     <div className="flex flex-col">
                       <span className="text-secondary font-label text-[0.6875rem] uppercase tracking-wider">Correo Electrónico</span>
-                      <span className="text-on-surface font-medium">{lead.email}</span>
+                      <span className="text-on-surface font-medium">{lead.email || lead.mail}</span>
                     </div>
                   )}
                   <div className="flex flex-col">
@@ -409,7 +415,7 @@ export default function ClientProfile() {
                         name: lead.name || '',
                         dni: lead.dni || '',
                         phone: lead.phone || '',
-                        email: lead.email || '',
+                        email: lead.email || lead.mail || '',
                         profession: lead.profession || ''
                       });
                     }}
@@ -524,7 +530,7 @@ Usá un tono profesional pero claro. Máximo 200 palabras.`;
                     onClick={async () => {
                       setSavingSummary(true);
                       try {
-                        await updateDoc(doc(db, 'leads', id!), { details: summaryDraft });
+                        await updateDoc(doc(db, 'leads', id!), { details: summaryDraft, updatedAt: serverTimestamp() });
                         setLead((prev: any) => ({ ...prev, details: summaryDraft }));
                         setIsEditingSummary(false);
                       } catch (err) {

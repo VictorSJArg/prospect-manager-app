@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
+import { buildLeadContactFields } from '../utils/contact';
 
 // Lazy AI import - only when user triggers AI features
 let _ai: any = null;
@@ -23,6 +24,7 @@ export default function NewLead() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [dni, setDni] = useState('');
   const [details, setDetails] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,7 @@ export default function NewLead() {
             contents: {
               parts: [
                 { inlineData: { data: base64Data, mimeType: file.type } },
-                { text: 'Extract the following information from this conversation screenshot: Name of the prospect, Phone number, DNI if visible, and a brief summary of their legal case/details. Return ONLY a JSON object with keys: name, phone, dni, details.' },
+                { text: 'Extract the following information from this conversation screenshot: Name of the prospect, Phone number, email if visible, DNI if visible, and a brief summary of their legal case/details. Return ONLY a JSON object with keys: name, phone, email, dni, details.' },
               ],
             },
             config: { responseMimeType: 'application/json' },
@@ -58,6 +60,7 @@ export default function NewLead() {
             const data = JSON.parse(response.text);
             if (data.name) setName(data.name);
             if (data.phone) setPhone(data.phone);
+            if (data.email) setEmail(data.email);
             if (data.dni) setDni(data.dni);
             if (data.details) setDetails(data.details);
           }
@@ -158,10 +161,12 @@ export default function NewLead() {
       const docRef = await addDoc(collection(db, 'leads'), {
         name,
         phone,
+        ...buildLeadContactFields(phone, email, { initializeCampaignConsent: true }),
         dni,
         details,
         status: 'Sin Análisis',
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
         userId: user.uid,
         userName: user.displayName || user.email || 'Usuario',
       });
@@ -291,6 +296,18 @@ export default function NewLead() {
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full bg-surface-container-highest border-b-2 border-outline/30 focus:border-primary focus:ring-0 focus:outline-none py-3 px-0 text-on-surface placeholder:text-outline transition-colors text-lg font-medium"
                 placeholder="+54 11 1234 5678"
+              />
+            </div>
+
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold tracking-wider text-secondary uppercase">Mail / Correo Electronico</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-surface-container-highest border-b-2 border-outline/30 focus:border-primary focus:ring-0 focus:outline-none py-3 px-0 text-on-surface placeholder:text-outline transition-colors text-lg font-medium"
+                placeholder="correo@ejemplo.com"
               />
             </div>
 
