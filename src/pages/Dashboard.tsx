@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, query, orderBy, onSnapshot, limit, where, getDocs, updateDoc, doc, deleteDoc, writeBatch, getDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, limit, where, getDocs, updateDoc, doc, deleteDoc, writeBatch, getDoc, serverTimestamp, deleteField } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -157,6 +157,19 @@ export default function Dashboard() {
       if (typeof dateObj === 'string' || typeof dateObj === 'number') return new Date(dateObj).getTime();
       return 0;
     } catch(e) { return 0; }
+  };
+
+  const formatSentDate = (dateVal: any) => {
+    if (!dateVal) return '';
+    try {
+      const d = typeof dateVal.toDate === 'function' ? dateVal.toDate() : new Date(dateVal);
+      if (Number.isNaN(d.getTime())) return '';
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      return `${day}/${month}`;
+    } catch (err) {
+      return '';
+    }
   };
 
   // Collect unique statuses for the filter
@@ -585,13 +598,27 @@ export default function Dashboard() {
                           <div className="relative">
                             <select
                               value={lead.selectedTemplateId || ''}
-                              onChange={(e) => updateDoc(doc(db, 'leads', lead.id), { selectedTemplateId: e.target.value || null, updatedAt: serverTimestamp() })}
+                              onChange={async (e) => {
+                                const newTemplateId = e.target.value || null;
+                                const updates: any = {
+                                  selectedTemplateId: newTemplateId,
+                                  updatedAt: serverTimestamp()
+                                };
+                                if (newTemplateId) {
+                                  updates[`sentTemplates.${newTemplateId}`] = deleteField();
+                                }
+                                await updateDoc(doc(db, 'leads', lead.id), updates);
+                              }}
                               className="text-xs font-semibold text-secondary pl-2 pr-6 py-1.5 rounded-lg w-full cursor-pointer focus:ring-1 focus:ring-primary truncate appearance-none border-0 bg-transparent hover:bg-surface-container-highest transition-colors"
                             >
                               <option value="">(Global)</option>
-                              {templates.map(t => (
-                                <option key={t.id} value={t.id}>{t.name}</option>
-                              ))}
+                              {templates.map(t => {
+                                const sentTime = lead.sentTemplates?.[t.id];
+                                const sentText = sentTime ? ` (Enviada ${formatSentDate(sentTime)} ✓)` : '';
+                                return (
+                                  <option key={t.id} value={t.id}>{t.name}{sentText}</option>
+                                );
+                              })}
                             </select>
                             <span className="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 text-[14px] pointer-events-none opacity-50">expand_more</span>
                           </div>

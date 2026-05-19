@@ -73,14 +73,20 @@ export default async function handler(req: any, res: any) {
     const templates = settingsData.templates || [];
     const activeTemplateId = settingsData.activeTemplateId || null;
 
-    const resolvedLeads = leads.map((lead: any) => {
-      const templateId = lead.selectedTemplateId || activeTemplateId;
-      const template = templates.find((t: any) => t.id === templateId) || null;
-      return {
-        ...lead,
-        template,
-      };
-    });
+    const resolvedLeads = leads
+      .map((lead: any) => {
+        const templateId = lead.selectedTemplateId || activeTemplateId;
+        const template = templates.find((t: any) => t.id === templateId) || null;
+        return {
+          ...lead,
+          template,
+        };
+      })
+      .filter((lead: any) => {
+        if (!lead.template) return false;
+        const sentTemplates = lead.sentTemplates || {};
+        return !sentTemplates[lead.template.id];
+      });
 
     sendJson(res, 200, {
       data: resolvedLeads,

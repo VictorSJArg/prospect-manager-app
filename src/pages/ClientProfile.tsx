@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc, updateDoc, collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, deleteField } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -24,6 +24,19 @@ export default function ClientProfile() {
   const [changingFollowUp, setChangingFollowUp] = useState(false);
   const [templates, setTemplates] = useState<any[]>([]);
   const [changingTemplate, setChangingTemplate] = useState(false);
+
+  const formatSentDate = (dateVal: any) => {
+    if (!dateVal) return '';
+    try {
+      const d = typeof dateVal.toDate === 'function' ? dateVal.toDate() : new Date(dateVal);
+      if (Number.isNaN(d.getTime())) return '';
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      return `${day}/${month}`;
+    } catch (err) {
+      return '';
+    }
+  };
 
   // Profile editing state
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -315,8 +328,25 @@ export default function ClientProfile() {
                       const newTemplateId = e.target.value || null;
                       setChangingTemplate(true);
                       try {
-                        await updateDoc(doc(db, 'leads', id!), { selectedTemplateId: newTemplateId, updatedAt: serverTimestamp() });
-                        setLead((prev: any) => ({ ...prev, selectedTemplateId: newTemplateId }));
+                        const updates: any = {
+                          selectedTemplateId: newTemplateId,
+                          updatedAt: serverTimestamp()
+                        };
+                        if (newTemplateId) {
+                          updates[`sentTemplates.${newTemplateId}`] = deleteField();
+                        }
+                        await updateDoc(doc(db, 'leads', id!), updates);
+                        setLead((prev: any) => {
+                          const nextSentTemplates = { ...prev.sentTemplates };
+                          if (newTemplateId) {
+                            delete nextSentTemplates[newTemplateId];
+                          }
+                          return {
+                            ...prev,
+                            selectedTemplateId: newTemplateId,
+                            sentTemplates: nextSentTemplates
+                          };
+                        });
                       } catch (err) {
                         console.error('Error updating template:', err);
                       }
@@ -326,9 +356,13 @@ export default function ClientProfile() {
                     className="w-full appearance-none bg-surface-container-low border border-outline-variant/20 rounded-lg px-3 py-2.5 pr-8 text-[0.8125rem] font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors cursor-pointer disabled:opacity-50"
                   >
                     <option value="">(Usar plantilla activa global)</option>
-                    {templates.map((t) => (
-                      <option key={t.id} value={t.id}>{t.name}</option>
-                    ))}
+                    {templates.map((t) => {
+                      const sentTime = lead.sentTemplates?.[t.id];
+                      const sentText = sentTime ? ` (Enviada ${formatSentDate(sentTime)} ✓)` : '';
+                      return (
+                        <option key={t.id} value={t.id}>{t.name}{sentText}</option>
+                      );
+                    })}
                   </select>
                   <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-secondary pointer-events-none">unfold_more</span>
                 </div>

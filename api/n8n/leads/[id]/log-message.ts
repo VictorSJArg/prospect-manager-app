@@ -58,12 +58,18 @@ export default async function handler(req: any, res: any) {
       userName: body.userName || 'n8n',
     });
 
-    await leadRef.update({
+    const updateData: Record<string, any> = {
       updatedAt: now,
       lastCampaignAt: now,
       lastCampaignChannel: body.channel || 'email',
       lastCampaignStatus: body.status || 'sent',
-    });
+    };
+
+    if (body.campaignId) {
+      updateData[`sentTemplates.${body.campaignId}`] = now;
+    }
+
+    await leadRef.update(updateData);
 
     sendJson(res, 201, {
       data: {

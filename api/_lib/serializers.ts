@@ -73,6 +73,7 @@ export function serializeLead(id: string, data: Record<string, any>) {
     lastCampaignChannel: data.lastCampaignChannel || '',
     lastCampaignStatus: data.lastCampaignStatus || '',
     selectedTemplateId: data.selectedTemplateId || null,
+    sentTemplates: data.sentTemplates || {},
   };
 }
 
