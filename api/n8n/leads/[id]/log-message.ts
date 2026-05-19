@@ -1,4 +1,4 @@
-import { FieldValue, getAdminDb } from '../../../_lib/firebaseAdmin';
+import { FieldValue, getAdminDb } from '../../../_lib/firebaseAdmin.js';
 import {
   applyCors,
   getJsonBody,
@@ -7,7 +7,7 @@ import {
   requireN8nAuth,
   sendError,
   sendJson,
-} from '../../../_lib/http';
+} from '../../../_lib/http.js';
 
 export default async function handler(req: any, res: any) {
   if (applyCors(req, res)) return;

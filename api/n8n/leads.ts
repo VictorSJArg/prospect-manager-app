@@ -1,4 +1,4 @@
-import { getAdminDb } from '../_lib/firebaseAdmin';
+import { getAdminDb } from '../_lib/firebaseAdmin.js';
 import {
   applyCors,
   getQueryParam,
@@ -9,8 +9,8 @@ import {
   sendError,
   sendJson,
   splitList,
-} from '../_lib/http';
-import { serializeLead, toMillis } from '../_lib/serializers';
+} from '../_lib/http.js';
+import { serializeLead, toMillis } from '../_lib/serializers.js';
 
 export default async function handler(req: any, res: any) {
   if (applyCors(req, res)) return;
