@@ -1,0 +1,199 @@
+{
+  "name": "PRUEBA DE APP NORIEGA PARA MAIL(activo)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "09ec2418-dfcd-40d5-9b38-1f223508ecc6",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        110
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://prospect-manager-app.vercel.app/api/n8n/active-template",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer n8n_prospect_api_token_582914"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "obtener-plantilla-activa-id",
+      "name": "Obtener Plantilla Activa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        450,
+        110
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://prospect-manager-app.vercel.app/api/n8n/leads",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "50"
+            },
+            {
+              "name": "hasContact",
+              "value": "true"
+            },
+            {
+              "name": "status",
+              "value": "En Proceso"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer n8n_prospect_api_token_582914"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cb97c952-842d-43d0-b9ec-f7618e1f0000",
+      "name": "Obtener Prospectos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        650,
+        110
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "62c5658e-eebf-4814-b16e-5f5bead5a83c",
+      "name": "Separar Lista de Prospectos",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        850,
+        110
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noriegaestudio@gmail.com",
+        "toEmail": "={{ $json.mail }}",
+        "subject": "={{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"subject\"].replace(/{{nombre}}/g, $json.name || '').replace(/{{dni}}/g, $json.dni || '').replace(/{{telefono}}/g, $json.phone || '').replace(/{{email}}/g, $json.mail || '') }}",
+        "text": "={{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"content\"].replace(/{{nombre}}/g, $json.name || '').replace(/{{dni}}/g, $json.dni || '').replace(/{{telefono}}/g, $json.phone || '').replace(/{{email}}/g, $json.mail || '') }}",
+        "options": {}
+      },
+      "id": "enviar-email-smtp-id",
+      "name": "Enviar Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        110
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://prospect-manager-app.vercel.app/api/n8n/leads/{{ $node[\"Separar Lista de Prospectos\"].json[\"id\"] }}/log-message",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer n8n_prospect_api_token_582914"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"channel\": \"email\",\n  \"to\": \"{{ $node[\"Separar Lista de Prospectos\"].json[\"mail\"] }}\",\n  \"subject\": \"{{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"subject\"].replace(/{{nombre}}/g, $node[\"Separar Lista de Prospectos\"].json[\"name\"] || '').replace(/{{dni}}/g, $node[\"Separar Lista de Prospectos\"].json[\"dni\"] || '').replace(/{{telefono}}/g, $node[\"Separar Lista de Prospectos\"].json[\"phone\"] || '').replace(/{{email}}/g, $node[\"Separar Lista de Prospectos\"].json[\"mail\"] || '') }}\",\n  \"content\": \"{{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"content\"].replace(/{{nombre}}/g, $node[\"Separar Lista de Prospectos\"].json[\"name\"] || '').replace(/{{dni}}/g, $node[\"Separar Lista de Prospectos\"].json[\"dni\"] || '').replace(/{{telefono}}/g, $node[\"Separar Lista de Prospectos\"].json[\"phone\"] || '').replace(/{{email}}/g, $node[\"Separar Lista de Prospectos\"].json[\"mail\"] || '') }}\",\n  \"status\": \"sent\",\n  \"campaignId\": \"{{ $node[\"Obtener Plantilla Activa\"].json[\"data\"][\"name\"] }}\"\n}",
+        "options": {}
+      },
+      "id": "af0ec33c-36a3-4ac1-89f4-bb8b14acf4be",
+      "name": "Registrar Mensaje Enviado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1250,
+        110
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Obtener Plantilla Activa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Plantilla Activa": {
+      "main": [
+        [
+          {
+            "node": "Obtener Prospectos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Prospectos": {
+      "main": [
+        [
+          {
+            "node": "Separar Lista de Prospectos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar Lista de Prospectos": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Email": {
+      "main": [
+        [
+          {
+            "node": "Registrar Mensaje Enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  }
+}
